@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WUWT</string>
+    <string name="title_activity_type_item">TypeItem</string>
+    <string name="title_activity_item_info">ItemInfo</string>
+</resources>
