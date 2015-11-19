@@ -45,13 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        // DON'T NEED?? MAGIC?
-        // Enable Local Datastore and connects to my parse server
-        /*Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "K2Ff07sRqj6VPQYT12VQLQv7LtxIOe7eWfGRwWXz", "YyQLX9jwUpT2dxgsKeR5GEHTaweZuB6JN9V2eHMZ");*/
-
-
         setContentView(R.layout.activity_main);
 
         //assigns initialized objects to ones I created in xml files.
