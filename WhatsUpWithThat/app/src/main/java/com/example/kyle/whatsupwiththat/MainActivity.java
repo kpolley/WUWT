@@ -1,7 +1,9 @@
 package com.example.kyle.whatsupwiththat;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,30 +17,34 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Initializes objects
+    //Initializes Main Page Items
     ListView listview;
     TextView txtTitle;
     TextView txtBody;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     FloatingActionButton mAddButton;
-    /*DrawerLayout mDrawerLayout;
-    ListView drawerList;
-    String drawerItems[] = {"Home", "Your Posts", "Your Comments", "Sign Out"};*/
+
+    //Initializes drawer layout items
+    private DrawerLayout drawerLayout;
+    private ListView DrawerlistView;
+    private ArrayList<String> drawerItems;
+    private ArrayAdapter<String> adapter;
+    private DrawerItemClickListener listener;
 
     //Initializes adapter and lists
     CustomListAdapter customAdapter;
     ArrayList<String> listItemArrayListTitle = new ArrayList<>();
     ArrayList<String> listItemArrayListBody = new ArrayList<>();
-
 
 
     @Override
@@ -47,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //assigns initialized objects to ones I created in xml files.
 
         //Main Page
         listview = (ListView) findViewById(R.id.list);
@@ -57,13 +62,9 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_container);
         mAddButton = (FloatingActionButton) findViewById(R.id.AddNewButton);
 
-        //TODO: GET DRAWER FINISHED BELOW
-        /*mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        drawerList = (ListView) findViewById(R.id.drawerList);
-
-        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerItems));*/
 
         customAdapter = new CustomListAdapter(getApplicationContext(), listItemArrayListTitle, listItemArrayListBody);
+
 
         //Changes colors and formats of XML files
         mAddButton.setColorFilter(getResources().getColor(R.color.niceLightGrey));
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Downloads the list from parse at startup
         downloadList();
+
 
         //If user swipes down, refresh list
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,9 +93,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
 
             }
-        });
-    }
 
+        });
+
+        //EVERYTHING DRAWER
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        DrawerlistView = (ListView) findViewById(R.id.drawer_list_view);
+
+        String[] temp = getResources().getStringArray(R.array.drawer_items);
+        drawerItems = new ArrayList<>(Arrays.asList(temp));
+
+        adapter = new ArrayAdapter<String>(getApplicationContext(),
+                R.layout.drawer_list_item, R.id.listtext, drawerItems);
+        DrawerlistView.setAdapter(adapter);
+
+        listener = new DrawerItemClickListener();
+        DrawerlistView.setOnItemClickListener(listener);
+
+
+    }
 
     //Opens edit page when click add button
     public void openEditPage(View v) {
@@ -114,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             downloadList();
         }
     }
+
     //Downloads and displays list from Parse.
     public void downloadList() {
 
@@ -127,15 +147,14 @@ public class MainActivity extends AppCompatActivity {
                     customAdapter.getTitleData().clear();
                     customAdapter.getBodyData().clear();
 
-                    for(int i = 0; i < list.size(); i++){
+                    for (int i = 0; i < list.size(); i++) {
                         listItemArrayListTitle.add(list.get(i).getString("postTitle"));
                         listItemArrayListBody.add(list.get(i).getString("postBody"));
                     }
                     Log.d("score", "Retrieved " + list.size() + " posts");
                     mSwipeRefreshLayout.setRefreshing(false);
 
-                }
-                else {
+                } else {
                     Log.d("score", "Error: " + e.getMessage());
                     Toast.makeText(getApplicationContext(), "Could not refresh feed", Toast.LENGTH_LONG).show();
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -147,6 +166,34 @@ public class MainActivity extends AppCompatActivity {
                 listview.setAdapter(customAdapter);
             }
         });
+    }
+
+    public class DrawerItemClickListener implements AdapterView.OnItemClickListener {
+
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //TODO Do Fun things with Fragments
+            if(Objects.equals(drawerItems.get(position), "Home")){
+                Intent i = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(i);
+            }
+
+            if(Objects.equals(drawerItems.get(position), "Sign In")){
+                Intent i = new Intent(MainActivity.this, SignInUser.class);
+                startActivity(i);
+            }
+
+            if(Objects.equals(drawerItems.get(position), "Your Posts")){
+                Toast.makeText(getApplicationContext(), "Clicked " + drawerItems.get(position), Toast.LENGTH_LONG).show();
+            }
+
+            if(Objects.equals(drawerItems.get(position), "Your Comments")){
+                Toast.makeText(getApplicationContext(), "Clicked " + drawerItems.get(position), Toast.LENGTH_LONG).show();
+            }
+            drawerLayout.closeDrawer(DrawerlistView);
+        }
     }
 }
 
