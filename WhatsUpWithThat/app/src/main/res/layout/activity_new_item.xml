@@ -63,4 +63,5 @@
         android:id="@+id/submitPost"
         android:layout_gravity="center_horizontal"
         android:onClick="SubmitInfo"/>
+
 </LinearLayout>

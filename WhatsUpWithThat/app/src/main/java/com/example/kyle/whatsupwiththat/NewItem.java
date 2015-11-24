@@ -7,9 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class NewItem extends AppCompatActivity {
+import com.parse.ParseObject;
+
+import java.text.ParseException;
+
+public class NewItem extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,7 @@ public class NewItem extends AppCompatActivity {
 
     EditText editTitle, editBody;
     String editTitleString, editBodyString;
+
 
     //When the submit button is clicked, get text from user and return it to the main activity
     public void SubmitInfo(View v)
@@ -43,12 +49,11 @@ public class NewItem extends AppCompatActivity {
 
         else
         {
-            Intent returnTitleIntent = getIntent();
-            Intent returnBodyIntent = getIntent();
-            returnTitleIntent.putExtra("titleResult", editTitleString);
-            returnBodyIntent.putExtra("bodyResult", editBodyString);
-            setResult(RESULT_OK, returnBodyIntent);
-            setResult(RESULT_OK, returnTitleIntent);
+            ParseObject newPost = new ParseObject("Post");
+            newPost.put("postTitle", editTitleString);
+            newPost.put("postBody", editBodyString);
+            newPost.saveInBackground();
+            setResult(RESULT_OK);
             finish();
         }
     }

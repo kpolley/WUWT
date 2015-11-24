@@ -2,10 +2,17 @@
     <string name="app_name">WUWT</string>
     <string name="title_activity_type_item">TypeItem</string>
     <string name="title_activity_item_info">ItemInfo</string>
-    <string-array name="drawer_items">
+    <string-array name="drawer_items_no_user">
         <item>Home</item>
         <item>Your Posts</item>
         <item>Your Comments</item>
         <item>Sign In</item>
     </string-array>
+    <string-array name="drawer_items_with_user">
+        <item>Home</item>
+        <item>Your Posts</item>
+        <item>Your Comments</item>
+        <item>Sign Out</item>
+    </string-array>
+
 </resources>

@@ -20,6 +20,8 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         //Main Page
@@ -101,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerlistView = (ListView) findViewById(R.id.drawer_list_view);
 
-        String[] temp = getResources().getStringArray(R.array.drawer_items);
+        String[] temp = getResources().getStringArray(R.array.drawer_items_no_user);
         drawerItems = new ArrayList<>(Arrays.asList(temp));
 
         adapter = new ArrayAdapter<String>(getApplicationContext(),
@@ -118,23 +122,17 @@ public class MainActivity extends AppCompatActivity {
     public void openEditPage(View v) {
         Intent i = new Intent(this, NewItem.class);
         startActivityForResult(i, 1);
+
     }
-
-
-    //Gets data from input from NewItem activity and uploads it to Parse. If no new data then no action.
+    //If added post, download list again
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == 1 & resultCode == Activity.RESULT_OK) {
-            ParseObject newPost = new ParseObject("Post");
-            newPost.put("postTitle", data.getStringExtra("titleResult"));
-            newPost.put("postBody", data.getStringExtra("bodyResult"));
-            newPost.saveInBackground();
             downloadList();
         }
     }
 
-    //Downloads and displays list from Parse.
+            //Downloads and displays list from Parse.
     public void downloadList() {
 
         final ParseQuery<ParseObject> postQuery = ParseQuery.getQuery("Post");
@@ -151,11 +149,11 @@ public class MainActivity extends AppCompatActivity {
                         listItemArrayListTitle.add(list.get(i).getString("postTitle"));
                         listItemArrayListBody.add(list.get(i).getString("postBody"));
                     }
-                    Log.d("score", "Retrieved " + list.size() + " posts");
+                    Log.d("downloadposts", "Retrieved " + list.size() + " posts");
                     mSwipeRefreshLayout.setRefreshing(false);
 
                 } else {
-                    Log.d("score", "Error: " + e.getMessage());
+                    Log.d("downloadposts", "Error: " + e.getMessage());
                     Toast.makeText(getApplicationContext(), "Could not refresh feed", Toast.LENGTH_LONG).show();
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
@@ -195,5 +193,9 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(DrawerlistView);
         }
     }
+
+
+
+
 }
 
