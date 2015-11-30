@@ -11,15 +11,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.text.ParseException;
 
-public class NewItem extends MainActivity {
+public class NewItem extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
+        setTitle("New Post");
     }
 
     EditText editTitle, editBody;
@@ -50,11 +52,21 @@ public class NewItem extends MainActivity {
         else
         {
             ParseObject newPost = new ParseObject("Post");
-            newPost.put("postTitle", editTitleString);
-            newPost.put("postBody", editBodyString);
-            newPost.saveInBackground();
-            setResult(RESULT_OK);
-            finish();
+
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            if (currentUser != null) {
+                newPost.put("postTitle", editTitleString);
+                newPost.put("postBody", editBodyString);
+                newPost.put("postedBy", currentUser.getObjectId());
+                newPost.saveInBackground();
+                setResult(RESULT_OK);
+                finish();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "You Must Sign in", Toast.LENGTH_LONG).show();
+            }
+
+
         }
     }
 

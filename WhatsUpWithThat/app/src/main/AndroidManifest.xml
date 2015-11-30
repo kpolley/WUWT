@@ -28,6 +28,8 @@
         </activity>
         <activity android:name=".SignUpUser" >
         </activity>
+        <activity android:name=".YourPosts">
+        </activity>
     </application>
 
 

@@ -13,6 +13,7 @@ public class ItemFullInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_full_info);
+        setTitle("View Post");
         Intent i = getIntent();
         String Title = i.getStringExtra("TitleClick");
         String Body = i.getStringExtra("BodyClick");

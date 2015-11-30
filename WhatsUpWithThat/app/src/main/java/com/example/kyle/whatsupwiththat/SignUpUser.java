@@ -16,6 +16,7 @@ public class SignUpUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_page);
+        setTitle("Sign Up");
     }
 
     EditText userName, password, email;
